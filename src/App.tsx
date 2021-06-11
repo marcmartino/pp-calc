@@ -7,12 +7,14 @@ import { Footer } from "./components/Footer";
 function App() {
   return (
     <RouteProvider>
-      <Header>
-        <div className="flex flex-col h-full items-center justify-center ">
-          <Page />
-        </div>
-      </Header>
-      <Footer />
+      <div className="flex h-full flex-col justify-between">
+        <Header>
+          <div className="flex flex-col h-full items-center justify-center ">
+            <Page />
+          </div>
+        </Header>
+        <Footer />
+      </div>
     </RouteProvider>
   );
 }

@@ -1,25 +1,24 @@
-import { FC, Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
-import { pages as ps } from "../constants/pageNavigation";
-import { Link, useLocation } from "react-router-dom";
+import { FC } from "react";
+import { Disclosure } from "@headlessui/react";
+import { routes, useRoute } from "../utils/router";
 
-const navigation = ["Dashboard", "Team", "Projects", "Calendar", "Reports"];
-const profile = ["Your Profile", "Settings", "Sign out"];
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+interface Props {}
 
-interface Props<
-  T extends Record<string, { title: string; route: string }> = typeof ps
-> {
-  activePage: keyof T;
-  pages: T;
-}
+const activeNavLink =
+  "bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium";
+const inactiveNavLink =
+  "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium";
 
-export const Header: FC<Props> = ({ children, activePage, pages = ps }) => {
-  const location = useLocation();
+const activeMobileNavLink =
+  "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium";
+const inactiveMobileNavLink =
+  "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium";
+
+export const Header: FC<Props> = ({ children }) => {
+  const route = useRoute();
+
   return (
     <div>
       <Disclosure as="nav" className="bg-gray-800">
@@ -33,35 +32,67 @@ export const Header: FC<Props> = ({ children, activePage, pages = ps }) => {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
-                      {Object.entries(pages).map(
-                        ([key, { title, emptyRoute }], itemIdx) => {
-                          return location.pathname.indexOf(emptyRoute) !==
-                            -1 ? (
-                            <Fragment key={key}>
-                              {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
-                              <Link
-                                to={emptyRoute}
-                                className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                              >
-                                {title}
-                              </Link>
-                            </Fragment>
-                          ) : (
-                            <Link
-                              key={key}
-                              to={emptyRoute}
-                              className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                            >
-                              {title}
-                            </Link>
-                          );
+                      <a
+                        {...routes.maxMultiplier().link}
+                        className={
+                          route.name === "maxMultiplier"
+                            ? activeNavLink
+                            : inactiveNavLink
                         }
-                      )}
+                      >
+                        Max Multiplier
+                      </a>
+                      <a
+                        {...routes.requiredPP().link}
+                        className={
+                          route.name === "requiredPP"
+                            ? activeNavLink
+                            : inactiveNavLink
+                        }
+                      >
+                        Required PP
+                      </a>
                     </div>
                   </div>
                 </div>
+
+                <div className="-mr-2 flex md:hidden">
+                  {/* Mobile menu button */}
+                  <Disclosure.Button className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                    <span className="sr-only">Open main menu</span>
+                    {open ? (
+                      <XIcon className="block h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <MenuIcon className="block h-6 w-6" aria-hidden="true" />
+                    )}
+                  </Disclosure.Button>
+                </div>
               </div>
             </div>
+            <Disclosure.Panel className="md:hidden">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a
+                  {...routes.maxMultiplier().link}
+                  className={
+                    route.name === "maxMultiplier"
+                      ? activeMobileNavLink
+                      : inactiveMobileNavLink
+                  }
+                >
+                  Max Multiplier
+                </a>
+                <a
+                  {...routes.requiredPP().link}
+                  className={
+                    route.name === "requiredPP"
+                      ? activeMobileNavLink
+                      : inactiveMobileNavLink
+                  }
+                >
+                  Required PP
+                </a>
+              </div>
+            </Disclosure.Panel>
           </>
         )}
       </Disclosure>
@@ -69,9 +100,7 @@ export const Header: FC<Props> = ({ children, activePage, pages = ps }) => {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            {Object.values(pages).filter(
-              ({ emptyRoute }) => location.pathname.indexOf(emptyRoute) !== -1
-            )[0]?.title || pages.maxMultiplier.title}
+            {route.name === "maxMultiplier" ? "Max Multiplier" : "Required PP"}
           </h1>
         </div>
       </header>

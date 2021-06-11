@@ -1,53 +1,36 @@
 import * as React from "react";
-import { FC, useState } from "react";
-import {
-  dollarsNeededForMult,
-  maxMultFromPrestigePoints,
-  minPrestigeToGetMult,
-} from "../calculations";
+import { FC, useEffect, useState } from "react";
+import { dollarsNeededForMult, minPrestigeToGetMult } from "../calculations";
 import { BALANCE, MULTIPLIER, PRESTIGE } from "../constants/emojis";
 import { PrestigeMultiplierCard } from "./PrestigeMultiplierCard";
-import { useParams } from "react-router-dom";
-import {
-  moneyPerPrestige,
-  PrestigeLevel,
-  PrestigeMultipliersWithValue,
-  PrestigePoints,
-} from "../constants";
+import { moneyPerPrestige, PrestigeLevel } from "../constants";
+import { routes } from "../utils/router";
+import { Route } from "type-route";
 
-interface Props {}
+interface Props {
+  route: Route<typeof routes.requiredPP>;
+}
 
-const reshapedMinPrestigeToGetMult = (
-  mult: number
-): {
-  prestige: PrestigePoints;
-  multipliers: PrestigeMultipliersWithValue;
-  cost: undefined;
-} => {
-  const [prestige, multipliers] = minPrestigeToGetMult(mult)();
-  return { prestige, multipliers, cost: undefined };
-};
-
-export const RequiredPPForm: FC<Props> = ({}) => {
-  // @ts-ignore react router types are caca
-  const { mult, lvl }: unknown = useParams();
-  const [goalMultiplier, setGoalMultiplier] = useState<number>(
-    typeof mult === "string" && !isNaN(Number(mult)) && Number(mult) > 0
-      ? Number(mult)
-      : 0
-  );
+export const RequiredPPForm: FC<Props> = ({ route }) => {
+  const { mult, lvl } = route.params;
+  const [goalMultiplier, setGoalMultiplier] = useState<number>(mult || 0);
 
   const [currentLevel, setCurrentLevel] = useState<number | undefined>(
-    typeof lvl === "string" && !isNaN(Number(lvl)) && Number(lvl) > 0
-      ? Number(lvl)
-      : undefined
+    lvl || undefined
   );
 
-  // const [prestige, multipliers] = minPrestigeToGetMult(goalMultiplier * 100)();
+  useEffect(() => {
+    routes
+      .requiredPP({
+        ...(goalMultiplier ? { mult: goalMultiplier } : {}),
+        ...(currentLevel ? { lvl: currentLevel } : {}),
+      })
+      .replace();
+  }, [goalMultiplier, currentLevel]);
 
   const { prestige, multipliers, cost } = currentLevel
     ? dollarsNeededForMult(currentLevel as PrestigeLevel)(goalMultiplier * 100)
-    : reshapedMinPrestigeToGetMult(goalMultiplier * 100);
+    : { ...minPrestigeToGetMult(goalMultiplier * 100)(), cost: undefined };
 
   return (
     <form>
@@ -62,14 +45,14 @@ export const RequiredPPForm: FC<Props> = ({}) => {
                 Goal Multiplier
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
                   <span className="text-gray-500 sm:text-sm">{MULTIPLIER}</span>
                 </div>
                 <input
                   type="text"
                   name="startingPrestige"
                   id="startingPrestige"
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-md border-gray-300 rounded-md"
+                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full p-1 pl-7 pr-12 sm:text-md border-gray-300 rounded-md"
                   placeholder="0"
                   value={goalMultiplier}
                   onChange={(e) => {
@@ -95,7 +78,7 @@ export const RequiredPPForm: FC<Props> = ({}) => {
                           : undefined
                       );
                     }}
-                    className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
+                    className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-gray border-l  bg-transparent text-gray-500 sm:text-sm rounded-md rounded-l-none"
                   >
                     <option>level</option>
                     {Object.keys(moneyPerPrestige).map((level) => (

@@ -51,8 +51,12 @@ export const minPrestigeToGetMult =
   (wantedMultiplier: Multiplier, prevCost = 0) =>
   (
     mults = initialPrestigeMultCosts
-  ): [prestige: PrestigePoints, multipliers: PrestigeMultipliersWithValue] => {
-    if (wantedMultiplier <= 0) return [prevCost, mults];
+  ): {
+    prestige: PrestigePoints;
+    multipliers: PrestigeMultipliersWithValue;
+  } => {
+    if (wantedMultiplier <= 0)
+      return { prestige: prevCost, multipliers: mults };
     const cheapestMult = cheapestMultiplierOption(mults);
     return minPrestigeToGetMult(
       wantedMultiplier - cheapestMult[0],
@@ -60,18 +64,28 @@ export const minPrestigeToGetMult =
     )(incrementMultiplier(cheapestMult[0])(mults));
   };
 
+const filterMax =
+  <M>(
+    isValidValue: (value: M | undefined) => value is M,
+    sort: (a: M, b: M) => M
+  ) =>
+  (values: M[]): M | undefined =>
+    values.reduce<M | undefined>((a, x) => {
+      return isValidValue(x) ? (isValidValue(a) ? sort(a, x) : x) : a;
+    }, undefined);
+
+const cheapestMultiplier = (maxCost: PrestigePoints) =>
+  filterMax<PrestigeMultiplierCosts>(
+    (v): v is PrestigeMultiplierCosts =>
+      v !== undefined && v[1].cost <= maxCost,
+    (a, x) => (a[1].multPerPrest >= x[1].multPerPrest ? a : x)
+  );
+
 export const maxMultFromPrestigePoints = (
   points: PrestigePoints,
   multipliers = initialPrestigeMultCosts
 ): MaxMultiplierResult => {
-  const cheapest = multipliers.reduce<PrestigeMultiplierCosts | undefined>(
-    (x, y) =>
-      (x !== undefined && x[1].multPerPrest >= y[1].multPerPrest) ||
-      y[1].cost > points
-        ? x
-        : y,
-    undefined
-  );
+  const cheapest = cheapestMultiplier(points)(multipliers);
 
   if (cheapest) {
     const subsequentIteration = maxMultFromPrestigePoints(
@@ -102,9 +116,9 @@ export const dollarsNeededForMult =
       initialPrestigeMultCosts
     );
     return {
-      cost: moneyPerPrestige[level] * minPrestige[0],
-      multipliers: minPrestige[1],
-      prestige: minPrestige[0],
+      cost: moneyPerPrestige[level] * minPrestige.prestige,
+      multipliers: minPrestige.multipliers,
+      prestige: minPrestige.prestige,
     };
   };
 

@@ -1,20 +1,22 @@
 import * as React from "react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { Route } from "type-route";
 import { maxMultFromPrestigePoints } from "../calculations";
 import { MULTIPLIER, PRESTIGE } from "../constants/emojis";
+import { routes } from "../utils/router";
 import { PrestigeMultiplierCard } from "./PrestigeMultiplierCard";
-import { useParams } from "react-router-dom";
 
-interface Props {}
+interface Props {
+  route?: Route<typeof routes.maxMultiplier>;
+}
 
-export const MaxMultiplierForm: FC<Props> = ({}) => {
-  // @ts-ignore react router types are caca
-  const { pp }: unknown = useParams();
-  const [startingPrestige, setStartingPrestige] = useState<number>(
-    typeof pp === "string" && !isNaN(Number(pp)) && Number(pp) > 0
-      ? Number(pp)
-      : 0
-  );
+export const MaxMultiplierForm: FC<Props> = ({ route }) => {
+  const urlPP = route?.params.pp;
+  const [startingPrestige, setStartingPrestige] = useState<number>(urlPP || 0);
+
+  useEffect(() => {
+    routes.maxMultiplier({ pp: startingPrestige }).replace();
+  }, [startingPrestige]);
 
   const [{ multiplier: maxMult, remainingPrest }, multipliers] =
     maxMultFromPrestigePoints(startingPrestige);
@@ -31,14 +33,14 @@ export const MaxMultiplierForm: FC<Props> = ({}) => {
                 Starting Prestige
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
                   <span className="text-gray-500 sm:text-sm">{PRESTIGE}</span>
                 </div>
                 <input
                   type="text"
                   name="startingPrestige"
                   id="startingPrestige"
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-md border-gray-300 rounded-md"
+                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full p-1 pl-7 pr-12 sm:text-md border-gray-300 rounded-md"
                   placeholder="0"
                   value={startingPrestige}
                   onChange={(e) => {

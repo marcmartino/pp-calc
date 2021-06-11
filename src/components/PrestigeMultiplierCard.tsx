@@ -1,8 +1,5 @@
-import { PaperClipIcon } from "@heroicons/react/solid";
 import { FC } from "react";
-import { MaxMultiplierResult } from "../calculations";
 import { PrestigeMultipliersWithValue } from "../constants";
-import { MULTIPLIER, PRESTIGE } from "../constants/emojis";
 
 interface Props {
   multipliers: PrestigeMultipliersWithValue;

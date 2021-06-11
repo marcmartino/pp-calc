@@ -11,6 +11,11 @@ import {
   Multiplier,
 } from "./constants";
 
+export type MaxMultiplierResult = [
+  result: { multiplier: Multiplier; remainingPrest: PrestigePoints },
+  multipliers: PrestigeMultipliersWithValue
+];
+
 export const cheapestMultiplierOption = (
   costs: PrestigeMultipliersWithValue
 ): PrestigeMultiplierCosts =>
@@ -58,10 +63,7 @@ const minPrestigeToGetMult =
 export const maxMultFromPrestigePoints = (
   points: PrestigePoints,
   multipliers = initialPrestigeMultCosts
-): [
-  result: { multiplier: Multiplier; remainingPrest: PrestigePoints },
-  multipliers: PrestigeMultipliersWithValue
-] => {
+): MaxMultiplierResult => {
   const cheapest = multipliers.reduce<PrestigeMultiplierCosts | undefined>(
     (x, y) =>
       (x !== undefined && x[1].multPerPrest >= y[1].multPerPrest) ||

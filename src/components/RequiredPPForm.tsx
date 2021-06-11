@@ -112,7 +112,7 @@ export const RequiredPPForm: FC<Props> = ({}) => {
             Required Prestige: {prestige.toLocaleString()}
             {PRESTIGE}
           </p>
-          {cost && (
+          {cost && currentLevel && (
             <p className="mt-1 max-w-2xl text-sm text-gray-500">
               Required Money: {cost.toLocaleString()}
               {BALANCE}

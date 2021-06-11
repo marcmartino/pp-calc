@@ -2,6 +2,7 @@ import { FC, Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import { pages as ps } from "../constants/pageNavigation";
+import { Link, useLocation } from "react-router-dom";
 
 const navigation = ["Dashboard", "Team", "Projects", "Calendar", "Reports"];
 const profile = ["Your Profile", "Settings", "Sign out"];
@@ -11,13 +12,14 @@ function classNames(...classes: string[]) {
 }
 
 interface Props<
-  T extends Record<string, { title: string; hash: string }> = typeof ps
+  T extends Record<string, { title: string; route: string }> = typeof ps
 > {
   activePage: keyof T;
   pages: T;
 }
 
 export const Header: FC<Props> = ({ children, activePage, pages = ps }) => {
+  const location = useLocation();
   return (
     <div>
       <Disclosure as="nav" className="bg-gray-800">
@@ -27,31 +29,33 @@ export const Header: FC<Props> = ({ children, activePage, pages = ps }) => {
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <img className="h-8 w-8" src="./prest.png" alt="Workflow" />
+                    <img className="h-8 w-8" src="/prest.png" alt="PP" />
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
                       {Object.entries(pages).map(
-                        ([key, { title, hash }], itemIdx) =>
-                          itemIdx === 0 ? (
+                        ([key, { title, emptyRoute }], itemIdx) => {
+                          return location.pathname.indexOf(emptyRoute) !==
+                            -1 ? (
                             <Fragment key={key}>
                               {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
-                              <a
-                                href={`#${hash}`}
+                              <Link
+                                to={emptyRoute}
                                 className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
                               >
                                 {title}
-                              </a>
+                              </Link>
                             </Fragment>
                           ) : (
-                            <a
+                            <Link
                               key={key}
-                              href={`#${hash}`}
+                              to={emptyRoute}
                               className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                             >
                               {title}
-                            </a>
-                          )
+                            </Link>
+                          );
+                        }
                       )}
                     </div>
                   </div>

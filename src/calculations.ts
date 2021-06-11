@@ -47,7 +47,7 @@ export const incrementMultiplier =
     return updatedCosts as PrestigeMultipliersWithValue;
   };
 
-const minPrestigeToGetMult =
+export const minPrestigeToGetMult =
   (wantedMultiplier: Multiplier, prevCost = 0) =>
   (
     mults = initialPrestigeMultCosts
@@ -93,11 +93,19 @@ export const dollarsNeededForMult =
   (level: PrestigeLevel) =>
   (
     wantedMultiplier: number
-  ): [cost: Dollars, multipliers: PrestigeMultipliersWithValue] => {
+  ): {
+    cost: Dollars;
+    multipliers: PrestigeMultipliersWithValue;
+    prestige: PrestigePoints;
+  } => {
     const minPrestige = minPrestigeToGetMult(wantedMultiplier)(
       initialPrestigeMultCosts
     );
-    return [moneyPerPrestige[level] * minPrestige[0], minPrestige[1]];
+    return {
+      cost: moneyPerPrestige[level] * minPrestige[0],
+      multipliers: minPrestige[1],
+      prestige: minPrestige[0],
+    };
   };
 
 // TODO: come back to address the perf issues here

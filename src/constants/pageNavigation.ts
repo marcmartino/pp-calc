@@ -1,20 +1,26 @@
+import { Charts } from "../components/Charts";
+import { MaxMultiplierForm } from "../components/MaxMultiplierForm";
+import { RequiredPPForm } from "../components/RequiredPPForm";
+
 export const pages = {
   maxMultiplier: {
     title: "Max Multiplier",
-    hash: "maxMult",
+    route: "/maxMult/:pp",
+    emptyRoute: "/maxMult",
+    Component: MaxMultiplierForm,
   },
-  ppToMultiplier: {
-    title: "PP Needed for Multiplier",
-    hash: "ppToMult",
+  RequiredPPForm: {
+    title: "Required PP",
+    route: "/requiredPP/:mult/level/:lvl",
+    emptyRoute: "/requiredPP",
+    Component: RequiredPPForm,
   },
-  cashToMultiplier: {
-    title: "Cash Needed for Multiplier",
-    hash: "cashToMult",
-  },
-  charts: {
-    title: "Charts",
-    hash: "charts",
-  },
+  //   charts: {
+  //     title: "Charts",
+  //     route: "/charts",
+  //     emptyRoute: "/charts",
+  //     Component: Charts,
+  //   },
 } as const;
 
 export type PageKey = keyof typeof pages;

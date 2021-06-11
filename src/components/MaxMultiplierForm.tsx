@@ -1,14 +1,20 @@
 import * as React from "react";
 import { FC, useState } from "react";
 import { maxMultFromPrestigePoints } from "../calculations";
-import { initialPrestigeMultCosts } from "../constants";
 import { MULTIPLIER, PRESTIGE } from "../constants/emojis";
 import { PrestigeMultiplierCard } from "./PrestigeMultiplierCard";
+import { useParams } from "react-router-dom";
 
 interface Props {}
 
 export const MaxMultiplierForm: FC<Props> = ({}) => {
-  const [startingPrestige, setStartingPrestige] = useState<number>(0);
+  // @ts-ignore react router types are caca
+  const { pp }: unknown = useParams();
+  const [startingPrestige, setStartingPrestige] = useState<number>(
+    typeof pp === "string" && !isNaN(Number(pp)) && Number(pp) > 0
+      ? Number(pp)
+      : 0
+  );
 
   const [{ multiplier: maxMult, remainingPrest }, multipliers] =
     maxMultFromPrestigePoints(startingPrestige);
@@ -34,6 +40,7 @@ export const MaxMultiplierForm: FC<Props> = ({}) => {
                   id="startingPrestige"
                   className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-md border-gray-300 rounded-md"
                   placeholder="0"
+                  value={startingPrestige}
                   onChange={(e) => {
                     const userNum = Number(e.target.value);
                     !isNaN(userNum) &&
@@ -45,30 +52,14 @@ export const MaxMultiplierForm: FC<Props> = ({}) => {
             </h3>
           </p>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            Remaining Prestige: {remainingPrest}
+            Remaining Prestige: {remainingPrest.toLocaleString()}
             {PRESTIGE}
             <br />
             TotalPrestige Multiplier: {(maxMult / 100).toFixed(2)}x {MULTIPLIER}
           </p>
         </div>
         <div className="border-t border-gray-200">
-          <dl>
-            {multipliers.map(([multSize, { qty, cost }], i) => (
-              <div
-                className={
-                  (i % 2 ? "bg-gray-50" : "bg-white") +
-                  " px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
-                }
-              >
-                <dt className="text-sm font-medium text-gray-500">
-                  {multSize}% Multiplier
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {qty}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <PrestigeMultiplierCard multipliers={multipliers} />
         </div>
       </div>
     </form>

@@ -71,17 +71,20 @@ export const Header: FC<Props> = ({ children }) => {
             </div>
             <Disclosure.Panel className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a
+                <Disclosure.Button
+                  as="a"
                   {...routes.maxMultiplier().link}
                   className={
                     route.name === "maxMultiplier"
                       ? activeMobileNavLink
                       : inactiveMobileNavLink
                   }
+                  aria-controls="nav"
                 >
                   Max Multiplier
-                </a>
-                <a
+                </Disclosure.Button>
+                <Disclosure.Button
+                  as="a"
                   {...routes.requiredPP().link}
                   className={
                     route.name === "requiredPP"
@@ -90,7 +93,7 @@ export const Header: FC<Props> = ({ children }) => {
                   }
                 >
                   Required PP
-                </a>
+                </Disclosure.Button>
               </div>
             </Disclosure.Panel>
           </>

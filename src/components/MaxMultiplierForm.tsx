@@ -23,7 +23,7 @@ export const MaxMultiplierForm: FC<Props> = ({ route }) => {
   return (
     <form>
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
+        <div className="px-4 py-5 sm:px-4">
           <p className="border-b border-gray-200">
             <h3>
               <label

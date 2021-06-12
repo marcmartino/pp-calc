@@ -10,6 +10,7 @@ export const PrestigeMultiplierCard: FC<Props> = ({ multipliers }) => {
     <dl>
       {multipliers.map(([multSize, { qty, cost }], i) => (
         <div
+          key={`${i}-${multSize}`}
           className={
             (i % 2 ? "bg-gray-50" : "bg-white") +
             " px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"

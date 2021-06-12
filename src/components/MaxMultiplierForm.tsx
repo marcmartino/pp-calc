@@ -41,8 +41,8 @@ export const MaxMultiplierForm: FC<Props> = ({ route }) => {
                   name="startingPrestige"
                   id="startingPrestige"
                   className="focus:ring-indigo-500 focus:border-indigo-500 block w-full p-1 pl-7 pr-12 sm:text-md border-gray-300 rounded-md"
-                  placeholder="0"
-                  value={startingPrestige}
+                  placeholder="Enter Prestige"
+                  value={startingPrestige || ""}
                   onChange={(e) => {
                     const userNum = Number(e.target.value);
                     !isNaN(userNum) &&

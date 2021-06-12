@@ -3,7 +3,11 @@ import { FC, useEffect, useState } from "react";
 import { dollarsNeededForMult, minPrestigeToGetMult } from "../calculations";
 import { BALANCE, MULTIPLIER, PRESTIGE } from "../constants/emojis";
 import { PrestigeMultiplierCard } from "./PrestigeMultiplierCard";
-import { moneyPerPrestige, PrestigeLevel } from "../constants";
+import {
+  initialPrestigeMultCosts,
+  moneyPerPrestige,
+  PrestigeLevel,
+} from "../constants";
 import { routes } from "../utils/router";
 import { Route } from "type-route";
 
@@ -28,9 +32,14 @@ export const RequiredPPForm: FC<Props> = ({ route }) => {
       .replace();
   }, [goalMultiplier, currentLevel]);
 
-  const { prestige, multipliers, cost } = currentLevel
-    ? dollarsNeededForMult(currentLevel as PrestigeLevel)(goalMultiplier * 100)
-    : { ...minPrestigeToGetMult(goalMultiplier * 100)(), cost: undefined };
+  const { prestige, multipliers, cost } =
+    goalMultiplier > 1500
+      ? { prestige: 0, multipliers: initialPrestigeMultCosts, cost: undefined }
+      : currentLevel
+      ? dollarsNeededForMult(currentLevel as PrestigeLevel)(
+          goalMultiplier * 100
+        )
+      : { ...minPrestigeToGetMult(goalMultiplier * 100)(), cost: undefined };
 
   return (
     <form>
@@ -53,13 +62,13 @@ export const RequiredPPForm: FC<Props> = ({ route }) => {
                   name="startingPrestige"
                   id="startingPrestige"
                   className="focus:ring-indigo-500 focus:border-indigo-500 block w-full p-1 pl-7 pr-12 sm:text-md border-gray-300 rounded-md"
-                  placeholder="0"
-                  value={goalMultiplier}
+                  placeholder="Enter Multiplier"
+                  value={goalMultiplier || ""}
                   onChange={(e) => {
                     const userNum = Number(e.target.value);
-                    !isNaN(userNum) &&
-                      userNum > -1 &&
-                      setGoalMultiplier(Number(e.target.value));
+                    const isValidNum = !isNaN(userNum) && userNum > -1;
+
+                    if (isValidNum) setGoalMultiplier(Number(e.target.value));
                   }}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center">

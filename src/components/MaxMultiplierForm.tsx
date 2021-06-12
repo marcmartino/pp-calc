@@ -21,6 +21,8 @@ export const MaxMultiplierForm: FC<Props> = ({ route }) => {
   const [{ multiplier: maxMult, remainingPrest }, multipliers] =
     maxMultFromPrestigePoints(startingPrestige);
 
+  console.table(multipliers.map(([m, v]) => ({ ...v, m: m })));
+
   return (
     <form>
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">

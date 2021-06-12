@@ -36,8 +36,9 @@
     "watch:css": "cross-env TAILWIND_MODE=watch NODE_ENV=development postcss src/styles/tailwind.css -o src/styles/index.css --watch",
     "react-scripts:start": "delay 5 && react-scripts start",
     "react-scripts:build": "react-scripts build",
-    "predeploy": "npm run build && ln -s ./build/index.html ./build/maxMult && ln -s ./build/index.html ./build/requiredPP",
-    "deploy": "echo 'ppcalc.marmar.io' > build/CNAME && gh-pages -d build"
+    "gen:build-copies": "mkdir ./build/maxMult && mkdir ./build/requiredPP && cp ./build/index.html ./build/maxMult/index.html && cp ./build/index.html ./build/requiredPP/index.html",
+    "predeploy": "yarn build && yarn gen:build-copies",
+    "deploy": "echo 'ppcalc.marmar.io' > ./build/CNAME && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"

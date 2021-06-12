@@ -41,6 +41,8 @@ export const RequiredPPForm: FC<Props> = ({ route }) => {
         )
       : { ...minPrestigeToGetMult(goalMultiplier * 100)(), cost: undefined };
 
+  console.table(multipliers.map(([m, v]) => ({ ...v, m: m })));
+
   return (
     <form>
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">

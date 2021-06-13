@@ -30,13 +30,10 @@ export const incrementMultiplier =
   (costs: PrestigeMultipliersWithValue): PrestigeMultipliersWithValue => {
     const updatedCosts = [...costs];
     const prevMultVals = costs[multiplierIndex[mult]];
-    const qtyOver1000 = prevMultVals[1].qty >= 1000;
+
     const newCost =
       prevMultVals[1].cost +
-      (initialPrestigeMultCosts[multiplierIndex[mult]][1].cost +
-        (qtyOver1000
-          ? initialPrestigeMultCosts[multiplierIndex[mult]][1].cost
-          : 0));
+      initialPrestigeMultCosts[multiplierIndex[mult]][1].cost;
     updatedCosts[multiplierIndex[mult]] = [
       prevMultVals[0],
       {

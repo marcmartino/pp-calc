@@ -58,7 +58,7 @@ export const moneyPerPrestige: Record<PrestigeLevel, Dollars> = {
 };
 
 export const initialPrestigeMultCosts: PrestigeMultipliersWithValue = [
-  [5, { qty: 0, cost: 5, multPerPrest: 1 }],
+  [5, { qty: 0, cost: 10, multPerPrest: 5 / 10 }],
   [15, { qty: 0, cost: 50, multPerPrest: 15 / 50 }],
   [30, { qty: 0, cost: 250, multPerPrest: 30 / 250 }],
   [50, { qty: 0, cost: 750, multPerPrest: 50 / 750 }],

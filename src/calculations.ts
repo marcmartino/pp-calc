@@ -56,7 +56,7 @@ export const minPrestigeToGetMult =
     prestige: PrestigePoints;
     multipliers: PrestigeMultipliersWithValue;
   } => {
-    if (wantedMultiplier <= 0)
+    if (wantedMultiplier <= 100)
       return { prestige: prevCost, multipliers: mults };
     const cheapestMult = cheapestMultiplierOption(mults);
     return minPrestigeToGetMult(
@@ -101,7 +101,7 @@ export const maxMultFromPrestigePoints = (
       subsequentIteration[1],
     ];
   }
-  return [{ multiplier: 0, remainingPrest: points }, multipliers];
+  return [{ multiplier: 100, remainingPrest: points }, multipliers];
 };
 
 export const dollarsNeededForMult =

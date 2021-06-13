@@ -123,6 +123,11 @@ export const dollarsNeededForMult =
     };
   };
 
+export const coinsForPrestige = (pp: PrestigePoints): number =>
+  pp.toString().length * pp.toString().length;
+export const briefcasesForPrestige = (pp: PrestigePoints): number =>
+  pp.toString().length - 1;
+
 // TODO: come back to address the perf issues here
 // export const maxMultFromPrestigePoints = (
 //   points: PrestigePoints,

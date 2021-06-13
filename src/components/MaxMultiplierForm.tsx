@@ -1,8 +1,12 @@
 import * as React from "react";
 import { FC, useEffect, useState } from "react";
 import { Route } from "type-route";
-import { maxMultFromPrestigePoints } from "../calculations";
-import { MULTIPLIER, PRESTIGE } from "../constants/emojis";
+import {
+  briefcasesForPrestige,
+  coinsForPrestige,
+  maxMultFromPrestigePoints,
+} from "../calculations";
+import { BRIEFCASE, COIN, MULTIPLIER, PRESTIGE } from "../constants/emojis";
 import { routes } from "../utils/router";
 import { PrestigeMultiplierCard } from "./PrestigeMultiplierCard";
 
@@ -56,12 +60,32 @@ export const MaxMultiplierForm: FC<Props> = ({ route }) => {
               </div>
             </h3>
           </div>
-          <p className="mt-1 max-w-2xl text-sm text-gray-500">
-            Remaining Prestige: {remainingPrest.toLocaleString()}
-            {PRESTIGE}
-            <br />
-            TotalPrestige Multiplier: {(maxMult / 100).toFixed(2)}x {MULTIPLIER}
-          </p>
+          <div className="mt-1 max-w-2xl text-sm text-gray-500">
+            <div className={"flex flex-row justify-between"}>
+              <span>
+                Remaining Prestige: {remainingPrest.toLocaleString()}
+                {PRESTIGE}
+              </span>
+              {startingPrestige > 0 && (
+                <span>
+                  {coinsForPrestige(startingPrestige)}
+                  {COIN}
+                </span>
+              )}
+            </div>
+            <div className={"flex flex-row justify-between"}>
+              <span>
+                TotalPrestige Multiplier: {(maxMult / 100).toFixed(2)}x
+                {MULTIPLIER}
+              </span>
+              {startingPrestige > 0 && (
+                <span>
+                  {briefcasesForPrestige(startingPrestige)}
+                  {BRIEFCASE}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
         <div className="border-t border-gray-200">
           <PrestigeMultiplierCard multipliers={multipliers} />

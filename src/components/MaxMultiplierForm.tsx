@@ -23,7 +23,9 @@ export const MaxMultiplierForm: FC<Props> = ({ route }) => {
   }, [startingPrestige]);
 
   const [{ multiplier: maxMult, remainingPrest }, multipliers] =
-    maxMultFromPrestigePoints(startingPrestige);
+    maxMultFromPrestigePoints(
+      startingPrestige <= 300_000_000 ? startingPrestige : 0
+    );
 
   console.table(multipliers.map(([m, v]) => ({ ...v, m: m })));
 

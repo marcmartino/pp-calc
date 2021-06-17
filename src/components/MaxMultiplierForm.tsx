@@ -8,6 +8,7 @@ import {
 } from "../calculations";
 import { BRIEFCASE, COIN, MULTIPLIER, PRESTIGE } from "../constants/emojis";
 import { routes } from "../utils/router";
+import { toNumber } from "../utils/toNumber";
 import { PrestigeMultiplierCard } from "./PrestigeMultiplierCard";
 
 interface Props {
@@ -53,10 +54,8 @@ export const MaxMultiplierForm: FC<Props> = ({ route }) => {
                   placeholder="Enter Prestige"
                   value={startingPrestige || ""}
                   onChange={(e) => {
-                    const userNum = Number(e.target.value);
-                    !isNaN(userNum) &&
-                      userNum > -1 &&
-                      setStartingPrestige(Number(e.target.value));
+                    const userNum = toNumber(e.target.value);
+                    userNum && setStartingPrestige(userNum);
                   }}
                 />
               </div>

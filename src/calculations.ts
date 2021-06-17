@@ -84,25 +84,48 @@ const cheapestMultiplier = (maxCost: PrestigePoints) =>
 
 export const maxMultFromPrestigePoints = (
   points: PrestigePoints,
-  multipliers = initialPrestigeMultCosts
+  multipliers = initialPrestigeMultCosts,
+  prev: MaxMultiplierResult = [
+    { multiplier: 100, remainingPrest: points },
+    initialPrestigeMultCosts,
+  ]
 ): MaxMultiplierResult => {
   const cheapest = cheapestMultiplier(points)(multipliers);
 
   if (cheapest) {
-    const subsequentIteration = maxMultFromPrestigePoints(
-      points - cheapest[1].cost,
-      incrementMultiplier(cheapest[0])(multipliers)
-    );
-    return [
+    const newMults = incrementMultiplier(cheapest[0])(multipliers);
+    return maxMultFromPrestigePoints(points - cheapest[1].cost, newMults, [
       {
-        multiplier: cheapest[0] + subsequentIteration[0].multiplier,
-        remainingPrest: subsequentIteration[0].remainingPrest,
+        multiplier: cheapest[0] + prev[0].multiplier,
+        remainingPrest: points - cheapest[1].cost,
       },
-      subsequentIteration[1],
-    ];
+      newMults,
+    ]);
   }
-  return [{ multiplier: 100, remainingPrest: points }, multipliers];
+  return prev;
 };
+
+// export const maxMultFromPrestigePoints = (
+//   points: PrestigePoints,
+//   multipliers = initialPrestigeMultCosts
+// ): MaxMultiplierResult => {
+//   const cheapest = cheapestMultiplier(points)(multipliers);
+
+//   if (cheapest) {
+//     const subsequentIteration = maxMultFromPrestigePoints(
+//       points - cheapest[1].cost,
+//       incrementMultiplier(cheapest[0])(multipliers)
+//     );
+//     return [
+//       {
+//         multiplier: cheapest[0] + subsequentIteration[0].multiplier,
+//         remainingPrest: subsequentIteration[0].remainingPrest,
+//       },
+//       subsequentIteration[1],
+//     ];
+//   }
+//   return [{ multiplier: 100, remainingPrest: points }, multipliers];
+// };
 
 export const dollarsNeededForMult =
   (level: PrestigeLevel) =>

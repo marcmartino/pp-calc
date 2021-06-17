@@ -105,28 +105,6 @@ export const maxMultFromPrestigePoints = (
   return prev;
 };
 
-// export const maxMultFromPrestigePoints = (
-//   points: PrestigePoints,
-//   multipliers = initialPrestigeMultCosts
-// ): MaxMultiplierResult => {
-//   const cheapest = cheapestMultiplier(points)(multipliers);
-
-//   if (cheapest) {
-//     const subsequentIteration = maxMultFromPrestigePoints(
-//       points - cheapest[1].cost,
-//       incrementMultiplier(cheapest[0])(multipliers)
-//     );
-//     return [
-//       {
-//         multiplier: cheapest[0] + subsequentIteration[0].multiplier,
-//         remainingPrest: subsequentIteration[0].remainingPrest,
-//       },
-//       subsequentIteration[1],
-//     ];
-//   }
-//   return [{ multiplier: 100, remainingPrest: points }, multipliers];
-// };
-
 export const dollarsNeededForMult =
   (level: PrestigeLevel) =>
   (
